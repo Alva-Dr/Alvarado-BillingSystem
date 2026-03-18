@@ -1,0 +1,32 @@
+@model SarEquipEnterprise.Models.Payment
+
+@{
+    ViewData["Title"] = "Archive Payment";
+}
+
+<div class="container">
+    <h1>Archive Payment</h1>
+    <div class="card">
+        <div class="card-body">
+            <p>
+                <strong>Warning:</strong> This action will archive the payment. Are you sure you want to continue?
+            </p>
+            <dl class="row">
+                <dt class="col-sm-3">Payment #</dt>
+                <dd class="col-sm-9">@Model.PaymentNumber</dd>
+
+                <dt class="col-sm-3">Amount</dt>
+                <dd class="col-sm-9">₱@Model.Amount.ToString("N2")</dd>
+
+                <dt class="col-sm-3">Payment Date</dt>
+                <dd class="col-sm-9">@Model.PaymentDate.ToString("MM/dd/yyyy")</dd>
+            </dl>
+
+            <form asp-action="ArchiveConfirmed" method="post">
+                <input type="hidden" name="id" value="@Model.PaymentId" />
+                <button type="submit" class="btn btn-warning">Archive</button>
+                <a asp-action="Details" asp-route-id="@Model.PaymentId" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>

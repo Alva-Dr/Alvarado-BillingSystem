@@ -1,0 +1,195 @@
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login - SarEquipEnterprise";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKICJqo8n74Z9DRgMat8+qjJDucRDSDUUUDihMarkSk50sPQrMnRoasNBvN0A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .login-card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 30px 20px;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 10px;
+        }
+
+            .logo-container img {
+                max-height: 165px;
+                width: auto;
+                object-fit: contain;
+            }
+
+
+        .login-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .login-body {
+            padding: 35px 30px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            transition: 0.2s ease;
+        }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            }
+
+        .form-check {
+            margin: 15px 0 20px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+            .register-link a {
+                color: #667eea;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                .register-link a:hover {
+                    color: #764ba2;
+                    text-decoration: underline;
+                }
+
+        .alert {
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .brand-text {
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card card">
+            <div class="login-header">
+                <div class="logo-container">
+                    <img src="@Url.Content("~/images/Logos.png")" alt="Logo" />
+                </div>
+            </div>
+            <div class="login-body">
+                @if (Model != null && !ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Login Failed!</strong>
+                        @if (ViewData.ModelState.Values.SelectMany(v => v.Errors).Any())
+                        {
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        }
+                    </div>
+                }
+
+                <div class="alert alert-info" role="alert">
+                    <small><i class="fas fa-star"></i> <strong>Note: Default Super Admin is ready still working for some implementations</small>
+                </div>
+
+                <form method="post" asp-action="Login" asp-controller="Account" novalidate>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email or username" type="text" />
+                        <span asp-validation-for="Email" class="form-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password <span style="color: #999; font-size: 12px;"></span></label>
+                        <input asp-for="Password" class="form-control" placeholder="Enter your password" type="password" />
+                        <span asp-validation-for="Password" class="form-error"></span>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-4 brand-text">
+            <p><i class="fas fa-shield-alt"></i> Secure Login Portal</p>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

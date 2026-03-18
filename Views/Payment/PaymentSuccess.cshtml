@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Payment Status";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-sm">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    <h2 class="mb-3">Payment Initiated</h2>
+                    <p class="lead text-muted">@ViewBag.Message</p>
+                    
+                    <div class="mt-4">
+                        <p>Your payment is currently processing. Once PayMongo confirms the transaction, your invoice will be updated automatically.</p>
+                        
+                        <div class="mt-5">
+                            <a asp-controller="Invoice" asp-action="Index" class="btn btn-primary me-2">Return to Invoices</a>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Go to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

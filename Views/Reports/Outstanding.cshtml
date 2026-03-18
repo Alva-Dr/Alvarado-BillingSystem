@@ -1,0 +1,50 @@
+@model SarEquipEnterprise.Models.BillingReport
+
+@{
+    ViewData["Title"] = "Outstanding Invoices Report";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Outstanding Invoices Report</h1>
+        <a asp-action="Index" class="btn btn-secondary">Back to Reports</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>As of @DateTime.Now.ToString("MM/dd/yyyy")</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h6>Total Outstanding</h6>
+                            <h3>₱@Model.TotalOutstanding.ToString("N2")</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h6>Total Invoices</h6>
+                            <h3>@Model.TotalInvoices</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <h6>Overdue</h6>
+                            <h3>@Model.OverdueInvoices</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <p>This report shows all invoices that are not yet paid or cancelled. Outstanding invoices include those with status: Draft, Sent, or Overdue.</p>
+    </div>
+</div>

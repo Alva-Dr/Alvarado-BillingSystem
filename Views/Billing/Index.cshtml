@@ -1,0 +1,341 @@
+@model SarEquipEnterprise.Controllers.BillingDashboardViewModel
+
+@{
+    ViewData["Title"] = "Billing Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="h2">Billing Dashboard</h1>
+        <span class="text-muted">@DateTime.Now.ToString("MMMM dd, yyyy")</span>
+    </div>
+
+    <!-- Top KPI Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="text-primary text-uppercase mb-1" style="font-size: 0.85rem; font-weight: bold;">Total Revenue</div>
+                    <div class="h4 mb-0 font-weight-bold">₱@Model.TotalRevenue.ToString("N0")</div>
+                    <small class="text-muted d-block mt-2">All invoices</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="text-success text-uppercase mb-1" style="font-size: 0.85rem; font-weight: bold;">Total Paid</div>
+                    <div class="h4 mb-0 font-weight-bold">₱@Model.TotalPayments.ToString("N0")</div>
+                    <small class="text-muted d-block mt-2">Completed payments</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="text-warning text-uppercase mb-1" style="font-size: 0.85rem; font-weight: bold;">Outstanding</div>
+                    <div class="h4 mb-0 font-weight-bold">₱@Model.TotalOutstanding.ToString("N0")</div>
+                    <small class="text-muted d-block mt-2">Amount due</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="text-info text-uppercase mb-1" style="font-size: 0.85rem; font-weight: bold;">Account Balance</div>
+                    <div class="h4 mb-0 font-weight-bold">₱@Model.AccountBalance.ToString("N0")</div>
+                    <small class="text-muted d-block mt-2">Current balance</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="row mb-4">
+        <!-- Invoice Status Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white py-3">
+                    <h6 class="m-0 font-weight-bold">Invoice Status Distribution</h6>
+                </div>
+                <div class="card-body" style="position: relative; height: 350px;">
+                    <canvas id="invoiceStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoice Summary -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white py-3">
+                    <h6 class="m-0 font-weight-bold">Invoice Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 mb-4 text-center">
+                            <div class="display-4 text-primary">@Model.TotalInvoices</div>
+                            <small class="text-secondary">Total Invoices</small>
+                        </div>
+                        <div class="col-6 mb-4 text-center">
+                            <div class="display-4 text-success">@Model.PaidInvoices</div>
+                            <small class="text-secondary">Paid</small>
+                        </div>
+                        <div class="col-6 mb-4 text-center">
+                            <div class="display-4 text-warning">@Model.PendingInvoices</div>
+                            <small class="text-secondary">Pending</small>
+                        </div>
+                        <div class="col-6 mb-4 text-center">
+                            <div class="display-4 text-danger">@Model.OverdueInvoices</div>
+                            <small class="text-secondary">Overdue</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="row mb-4">
+        <!-- Revenue vs Payments -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white py-3">
+                    <h6 class="m-0 font-weight-bold">Financial Overview</h6>
+                </div>
+                <div class="card-body" style="position: relative; height: 350px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow bg-light">
+                <div class="card-header bg-secondary text-white py-3">
+                    <h6 class="m-0 font-weight-bold">Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Invoice Completion</span>
+                            <span class="font-weight-bold">@(Model.TotalInvoices > 0 ? ((Model.PaidInvoices * 100) / Model.TotalInvoices).ToString("F0") : "0")%</span>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @(Model.TotalInvoices > 0 ? ((Model.PaidInvoices * 100) / Model.TotalInvoices).ToString("F0") : "0")%;" aria-valuenow="@(Model.TotalInvoices > 0 ? ((Model.PaidInvoices * 100) / Model.TotalInvoices) : 0)" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Collection Ratio</span>
+                            <span class="font-weight-bold">@(Model.TotalRevenue > 0 ? ((Model.TotalPayments * 100) / Model.TotalRevenue).ToString("F1") : "0")%</span>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: @(Model.TotalRevenue > 0 ? Math.Min(((Model.TotalPayments * 100) / Model.TotalRevenue), 100).ToString("F0") : "0")%;" aria-valuenow="@(Model.TotalRevenue > 0 ? ((Model.TotalPayments * 100) / Model.TotalRevenue) : 0)" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 1rem 0;">
+
+                    <div class="text-center">
+                        <h5 class="mb-3">Next Steps</h5>
+                        <a asp-controller="Invoice" asp-action="Create" class="btn btn-sm btn-primary btn-block mb-2">
+                            <i class="fas fa-plus"></i> Create Invoice
+                        </a>
+                        <a asp-controller="Payment" asp-action="Create" class="btn btn-sm btn-success btn-block">
+                            <i class="fas fa-money-check"></i> Record Payment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Data Tables -->
+    <div class="row">
+        <!-- Recent Invoices -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white py-3 d-flex justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Recent Invoices</h6>
+                    <a asp-controller="Invoice" asp-action="Index" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RecentInvoices.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Invoice #</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var invoice in Model.RecentInvoices)
+                                    {
+                                        <tr>
+                                            <td><a asp-controller="Invoice" asp-action="Details" asp-route-id="@invoice.InvoiceId" class="font-weight-bold">@invoice.InvoiceNumber</a></td>
+                                            <td>₱@invoice.TotalAmount.ToString("N0")</td>
+                                            <td>@invoice.InvoiceDate.ToString("MM/dd")</td>
+                                            <td>
+                                                <span class="badge bg-@(invoice.Status == "Paid" ? "success" : invoice.Status == "Overdue" ? "danger" : invoice.Status == "Sent" ? "info" : "secondary")">
+                                                    @invoice.Status
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-4 text-center text-muted">
+                            <p>No invoices yet.</p>
+                            <a asp-controller="Invoice" asp-action="Create" class="btn btn-sm btn-primary">Create First Invoice</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white py-3 d-flex justify-content-between">
+                    <h6 class="m-0 font-weight-bold">Recent Payments</h6>
+                    <a asp-controller="Payment" asp-action="Index" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RecentPayments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Payment #</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payment in Model.RecentPayments)
+                                    {
+                                        <tr>
+                                            <td><a asp-controller="Payment" asp-action="Details" asp-route-id="@payment.PaymentId" class="font-weight-bold">@payment.PaymentNumber</a></td>
+                                            <td class="text-success font-weight-bold">₱@payment.Amount.ToString("N0")</td>
+                                            <td>@payment.PaymentDate.ToString("MM/dd")</td>
+                                            <td><span class="badge bg-secondary">@payment.PaymentMethod</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="p-4 text-center text-muted">
+                            <p>No payments yet.</p>
+                            <a asp-controller="Payment" asp-action="Create" class="btn btn-sm btn-success">Record Payment</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<script>
+    // Invoice Status Chart
+    const invoiceStatusCtx = document.getElementById('invoiceStatusChart').getContext('2d');
+    new Chart(invoiceStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Paid', 'Pending', 'Overdue'],
+            datasets: [{
+                data: [@Model.PaidInvoices, @Model.PendingInvoices, @Model.OverdueInvoices],
+                backgroundColor: [
+                    '#1cc88a',
+                    '#f6c23e',
+                    '#e74c3c'
+                ],
+                borderColor: ['#fff', '#fff', '#fff'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Revenue vs Payments Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Revenue', 'Payments', 'Outstanding'],
+            datasets: [{
+                label: 'Amount',
+                data: [@Model.TotalRevenue, @Model.TotalPayments, @Model.TotalOutstanding],
+                backgroundColor: [
+                    '#4e73df',
+                    '#1cc88a',
+                    '#f6c23e'
+                ],
+                borderColor: ['#2e59d9', '#17a2b8', '#e8a200'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'x',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+</style>

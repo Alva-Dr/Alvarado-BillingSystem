@@ -1,0 +1,78 @@
+@model List<SarEquipEnterprise.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payments";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Payment Processing</h1>
+        <a asp-action="Create" class="btn btn-primary">Process New Payment</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Payment #</th>
+                                <th>Invoice ID</th>
+                                <th>Amount</th>
+                                <th>Payment Date</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Reference</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in Model)
+                            {
+                                <tr>
+                                    <td>@payment.PaymentNumber</td>
+                                    <td>@payment.InvoiceId</td>
+                                    <td>₱@payment.Amount.ToString("N2")</td>
+                                    <td>@payment.PaymentDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@payment.PaymentMethod</td>
+                                    <td>
+                                        <span class="badge bg-@(payment.PaymentStatus == "Completed" ? "success" : payment.PaymentStatus == "Refunded" ? "danger" : payment.PaymentStatus == "Archived" ? "secondary" : "warning")">
+                                            @payment.PaymentStatus
+                                        </span>
+                                        @if (payment.IsArchived)
+                                        {
+                                            <span class="ms-2 text-muted">(Archived)</span>
+                                        }
+                                    </td>
+                                    <td>@payment.ReferenceNumber</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="paymentDropdown-@payment.PaymentId" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="paymentDropdown-@payment.PaymentId">
+                                                <li><a class="dropdown-item" asp-action="Details" asp-route-id="@payment.PaymentId">👁 View</a></li>
+                                                @if (payment.PaymentStatus == "Completed" && (User.IsInRole("Admin") || User.IsInRole("SuperAdmin")))
+                                                {
+                                                    <li><a class="dropdown-item text-danger" asp-action="Archive" asp-route-id="@payment.PaymentId">🗑️ Archive</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <p>No payments found. <a asp-action="Create">Process your first payment</a> to get started.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

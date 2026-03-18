@@ -1,0 +1,70 @@
+@model SarEquipEnterprise.Models.AccountingIntegration
+
+@{
+    ViewData["Title"] = "Integration Details";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Integration Details</h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.IntegrationId" class="btn btn-warning">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Integration Information</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Integration Type:</dt>
+                <dd class="col-sm-9">@Model.IntegrationType</dd>
+
+                <dt class="col-sm-3">API Endpoint:</dt>
+                <dd class="col-sm-9">@Model.ApiEndpoint</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-@(Model.IsActive ? "success" : "secondary")">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Last Sync Date:</dt>
+                <dd class="col-sm-9">@(Model.LastSyncDate == DateTime.MinValue ? "Never" : Model.LastSyncDate.ToString("MM/dd/yyyy HH:mm"))</dd>
+
+                <dt class="col-sm-3">Sync Status:</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-@(Model.SyncStatus == "Success" ? "success" : Model.SyncStatus == "Failed" ? "danger" : "warning")">
+                        @Model.SyncStatus
+                    </span>
+                </dd>
+
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <dt class="col-sm-3">Error Message:</dt>
+                    <dd class="col-sm-9 text-danger">@Model.ErrorMessage</dd>
+                }
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button type="button" class="btn btn-success test-connection" data-id="@Model.IntegrationId">Test Connection</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelector('.test-connection').addEventListener('click', async function() {
+            const id = this.getAttribute('data-id');
+            const response = await fetch(`/Integration/TestConnection?id=${id}`, {
+                method: 'POST'
+            });
+            const result = await response.json();
+            alert(result.success ? 'Connection successful!' : 'Connection failed!');
+        });
+    </script>
+}

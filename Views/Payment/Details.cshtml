@@ -1,0 +1,68 @@
+@model SarEquipEnterprise.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Payment Details</h1>
+        <div>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Payment Information</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Payment Number:</dt>
+                <dd class="col-sm-9">@Model.PaymentNumber</dd>
+
+                <dt class="col-sm-3">Invoice ID:</dt>
+                <dd class="col-sm-9">@Model.InvoiceId</dd>
+
+                <dt class="col-sm-3">Amount:</dt>
+                <dd class="col-sm-9">₱@Model.Amount.ToString("N2")</dd>
+
+                <dt class="col-sm-3">Payment Date:</dt>
+                <dd class="col-sm-9">@Model.PaymentDate.ToString("MM/dd/yyyy")</dd>
+
+                <dt class="col-sm-3">Payment Method:</dt>
+                <dd class="col-sm-9">@Model.PaymentMethod</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-@(Model.PaymentStatus == "Completed" ? "success" : Model.PaymentStatus == "Refunded" ? "danger" : Model.PaymentStatus == "Archived" ? "secondary" : "warning")">
+                        @Model.PaymentStatus
+                    </span>
+                    @if (Model.IsArchived)
+                    {
+                        <span class="ms-2 text-muted">(Archived)</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Reference Number:</dt>
+                <dd class="col-sm-9">@Model.ReferenceNumber</dd>
+
+                <dt class="col-sm-3">Processed By:</dt>
+                <dd class="col-sm-9">@Model.ProcessedBy</dd>
+
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <dt class="col-sm-3">Notes:</dt>
+                    <dd class="col-sm-9">@Model.Notes</dd>
+                }
+            </dl>
+        </div>
+    </div>
+
+    @if (Model.PaymentStatus == "Completed" && (User.IsInRole("Admin") || User.IsInRole("SuperAdmin")))
+    {
+        <div class="mt-3">
+            <a asp-action="Archive" asp-route-id="@Model.PaymentId" class="btn btn-warning">Archive</a>
+        </div>
+    }
+</div>

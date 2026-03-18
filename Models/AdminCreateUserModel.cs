@@ -1,0 +1,30 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace SarEquipEnterprise.Models
+{
+    public class AdminCreateUserModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = null!;
+
+        [Required]
+        [StringLength(256)]
+        public string FullName { get; set; } = null!;
+
+        [Required]
+        [DataType(DataType.Password)]
+        [StringLength(100, MinimumLength = 6)]
+        public string Password { get; set; } = null!;
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = null!;
+
+        [Required]
+        public UserRole Role { get; set; } = UserRole.Employee;
+
+        public bool IsActive { get; set; } = true;
+    }
+}

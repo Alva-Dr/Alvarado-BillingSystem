@@ -1,0 +1,373 @@
+@model SarEquipEnterprise.Controllers.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Dashboard</h1>
+        <span class="text-muted">@DateTime.Now.ToString("MMMM dd, yyyy")</span>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Revenue</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">₱@Model.TotalRevenue.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-coins fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Account Balance</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">₱@Model.AccountBalance.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-credit-card fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Invoices</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalInvoices</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Outstanding</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">₱@Model.TotalOutstanding.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Status Overview -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Paid Invoices</div>
+                            <div class="h5 mb-0">@Model.PaidInvoices</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-warning text-white shadow">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Pending Invoices</div>
+                            <div class="h5 mb-0">@Model.PendingInvoices</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Overdue Invoices</div>
+                            <div class="h5 mb-0">@Model.OverdueInvoices</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-circle fa-2x text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-info text-white shadow">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Monthly Payments</div>
+                            <div class="h5 mb-0">₱@Model.MonthlyPayments.ToString("N2")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave fa-2x text-white-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Invoice" asp-action="Create" class="btn btn-primary w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">Create Invoice</span>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Payment" asp-action="Create" class="btn btn-success w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-credit-card fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">Process Payment</span>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Transaction" asp-action="Create" class="btn btn-info w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-exchange-alt fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">Add Transaction</span>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Reports" asp-action="Index" class="btn btn-secondary w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">View Reports</span>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Billing" asp-action="Index" class="btn btn-outline-primary w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">Billing Dashboard</span>
+                            </a>
+                        </div>
+                        <div class="col-md-2 col-sm-4 col-6 mb-3">
+                            <a asp-controller="Integration" asp-action="Index" class="btn btn-outline-secondary w-100 h-100 d-flex flex-column justify-content-center align-items-center shadow-sm" style="min-height: 100px; border-radius: 0.5rem; padding: 15px 5px;">
+                                <i class="fas fa-plug fa-2x mb-2"></i>
+                                <span style="font-size: 0.8rem; font-weight: bold; text-align: center;">Integrations</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <!-- Recent Invoices -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Invoices</h6>
+                    <a asp-controller="Invoice" asp-action="Index" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentInvoices.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice #</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var invoice in Model.RecentInvoices)
+                                    {
+                                        <tr>
+                                            <td><a asp-controller="Invoice" asp-action="Details" asp-route-id="@invoice.InvoiceId">@invoice.InvoiceNumber</a></td>
+                                            <td>@invoice.CustomerName</td>
+                                            <td>@invoice.InvoiceDate.ToString("MM/dd/yyyy")</td>
+                                            <td>₱@invoice.TotalAmount.ToString("N2")</td>
+                                            <td>
+                                                <span class="badge bg-@(invoice.Status == "Paid" ? "success" : invoice.Status == "Overdue" ? "danger" : invoice.Status == "Sent" ? "info" : "secondary")">
+                                                    @invoice.Status
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center mb-0">No invoices yet. <a asp-controller="Invoice" asp-action="Create">Create your first invoice</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-success">Recent Payments</h6>
+                    <a asp-controller="Payment" asp-action="Index" class="btn btn-sm btn-success">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentPayments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Payment #</th>
+                                        <th>Invoice</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payment in Model.RecentPayments)
+                                    {
+                                        <tr>
+                                            <td><a asp-controller="Payment" asp-action="Details" asp-route-id="@payment.PaymentId">@payment.PaymentNumber</a></td>
+                                            <td>@payment.InvoiceId</td>
+                                            <td>@payment.PaymentDate.ToString("MM/dd/yyyy")</td>
+                                            <td>₱@payment.Amount.ToString("N2")</td>
+                                            <td>@payment.PaymentMethod</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center mb-0">No payments yet. <a asp-controller="Payment" asp-action="Create">Process your first payment</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-info">Recent Transactions</h6>
+                    <a asp-controller="Transaction" asp-action="Index" class="btn btn-sm btn-info">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentTransactions.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction #</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var transaction in Model.RecentTransactions)
+                                    {
+                                        <tr>
+                                            <td><a asp-controller="Transaction" asp-action="Details" asp-route-id="@transaction.TransactionId">@transaction.TransactionNumber</a></td>
+                                            <td>@transaction.TransactionDate.ToString("MM/dd/yyyy")</td>
+                                            <td>
+                                                <span class="badge bg-@(transaction.TransactionType == "Credit" ? "success" : "danger")">
+                                                    @transaction.TransactionType
+                                                </span>
+                                            </td>
+                                            <td>@transaction.Description</td>
+                                            <td class="@(transaction.TransactionType == "Credit" ? "text-success" : "text-danger")">
+                                                @(transaction.TransactionType == "Credit" ? "+" : "-")₱@transaction.Amount.ToString("N2")
+                                            </td>
+                                            <td>₱@transaction.BalanceAfter.ToString("N2")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center mb-0">No transactions yet. <a asp-controller="Transaction" asp-action="Create">Add your first transaction</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+    .text-gray-300 {
+        color: #dddfeb !important;
+    }
+    .text-xs {
+        font-size: 0.7rem;
+    }
+    .shadow {
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+    }
+</style>

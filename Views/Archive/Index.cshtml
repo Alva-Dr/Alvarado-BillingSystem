@@ -1,0 +1,48 @@
+@model List<SarEquipEnterprise.Models.Payment>
+
+@{
+    ViewData["Title"] = "Archived Items";
+}
+
+<div class="container-fluid">
+    <h1>Archived Payments</h1>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Payment #</th>
+                            <th>Invoice ID</th>
+                            <th>Amount</th>
+                            <th>Payment Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr>
+                                <td>@p.PaymentNumber</td>
+                                <td>@p.InvoiceId</td>
+                                <td>₱@p.Amount.ToString("N2")</td>
+                                <td>@p.PaymentDate.ToString("MM/dd/yyyy")</td>
+                                <td>@p.PaymentStatus</td>
+                                <td>
+                                    <a asp-controller="Payment" asp-action="Details" asp-route-id="@p.PaymentId" class="text-info fs-5" title="View"><i class="fas fa-eye"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">No archived items found.</div>
+            }
+        </div>
+    </div>
+</div>

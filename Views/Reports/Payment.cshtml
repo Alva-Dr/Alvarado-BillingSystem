@@ -1,0 +1,65 @@
+@model SarEquipEnterprise.Models.BillingReport
+
+@{
+    ViewData["Title"] = "Payment Report";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Payment Report</h1>
+        <a asp-action="Index" class="btn btn-secondary">Back to Reports</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Report Period: @Model.StartDate.ToString("MM/dd/yyyy") - @Model.EndDate.ToString("MM/dd/yyyy")</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h6>Total Payments</h6>
+                            <h3>₱@Model.TotalPayments.ToString("N2")</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h6>Total Transactions</h6>
+                            <h3>@Model.TotalInvoices</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Payments by Method</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Payment Method</th>
+                        <th>Amount</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in Model.Details)
+                    {
+                        <tr>
+                            <td>@detail.Category</td>
+                            <td>₱@detail.Amount.ToString("N2")</td>
+                            <td>@detail.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

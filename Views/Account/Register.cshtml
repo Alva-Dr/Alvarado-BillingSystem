@@ -1,0 +1,216 @@
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register - SarEquipEnterprise";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKICJqo8n74Z9DRgMat8+qjJDucRDSDUUUDihMarkSk50sPQrMnRoasNBvN0A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 15px;
+        }
+
+        .register-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .register-card:hover {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .register-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .register-header i {
+            font-size: 32px;
+        }
+
+        .register-body {
+            padding: 40px 30px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #adb5bd;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 20px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .form-error {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .brand-text {
+            font-size: 13px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card card">
+            <div class="register-header">
+                <h1>
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </h1>
+            </div>
+            <div class="register-body">
+                @if (Model != null && !ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Registration Failed!</strong>
+                        @if (ViewData.ModelState.Values.SelectMany(v => v.Errors).Any())
+                        {
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        }
+                    </div>
+                }
+
+                <form method="post" asp-action="Register" asp-controller="Account" novalidate>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email" type="email" />
+                        <span asp-validation-for="Email" class="form-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" placeholder="Create a password" type="password" />
+                        <div class="password-requirements">
+                            <i class="fas fa-info-circle"></i> Minimum 6 characters
+                        </div>
+                        <span asp-validation-for="Password" class="form-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" type="password" />
+                        <span asp-validation-for="ConfirmPassword" class="form-error"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-register">
+                        <i class="fas fa-user-check"></i> Create Account
+                    </button>
+                </form>
+
+                <div class="login-link">
+                    <p>Already have an account? <a asp-action="Login" asp-controller="Account">Login here</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4 brand-text">
+            <p><i class="fas fa-shield-alt"></i> Secure Registration Portal</p>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

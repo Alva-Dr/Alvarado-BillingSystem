@@ -1,0 +1,75 @@
+================================================================================
+                    SAREQUIP ENTERPRISE BACKEND GUIDE
+                 LOCATIONS, APIS, AND ALGORITHMS OVERVIEW
+================================================================================
+
+This document serves as a guide for locating the source code that powers the 
+backend functionality of the SarEquip Enterprise platform. It also outlines the 
+APIs and Algorithms utilized within these locations.
+
+--------------------------------------------------------------------------------
+1. ACCOUNTING & PAYMENT INTEGRATION (PAYMONGO)
+--------------------------------------------------------------------------------
+[Image Label: PayMongo Payment Integration Service]
+Location: \Services\PaymentService.cs and \Controllers\WebhookController.cs
+
+• Description: Handles the logic for processing payments and securely receiving 
+  payment success callbacks via webhook integration.
+• API Usage (PayMongo API): The PayMongo API is utilized to create secure online 
+  checkout sessions and listen to webhooks when transactions are Completed or 
+  Failed. It ensures secure, third-party managed payment processing.
+• Algo Usage (Random Number Generation): Contains an algorithm (Random.Next) to 
+  auto-generate a unique 7-digit reference number for each processed payment.
+
+--------------------------------------------------------------------------------
+2. INVOICE GENERATION & PDF EXPORT
+--------------------------------------------------------------------------------
+[Image Label: Invoice Generation PDF Service]
+Location: \Services\InvoiceService.cs and \Controllers\InvoiceController.cs
+
+• Description: Manages the creation, updating, and formatting of invoices.
+• API Usage (QuestPDF): Uses the open-source QuestPDF library's Fluent API to 
+  map C# object properties (like Invoice Lines, Totals) mathematically to a 
+  fixed A4-size layout.
+• Algo Usage (Aggregation & Tax Computation): Evaluates total prices by 
+  iterating through selected items and summing up (Quantity * Unit Price) 
+  dynamically.
+
+--------------------------------------------------------------------------------
+3. IMAGE UPLOAD & ASSET MANAGEMENT
+--------------------------------------------------------------------------------
+[Image Label: Cloudinary Cloud Storage Service]
+Location: \Services\CloudinaryService.cs
+
+• Description: A dedicated service class for uploading images to the cloud to 
+  prevent local server storage bloat.
+• API Usage (Cloudinary API): Employs the CloudinaryDotNet package to 
+  authenticate via API Key and Secret, and push image buffers directly to 
+  Cloudinary's CDN. It returns secure URLs to be saved in the database.
+
+--------------------------------------------------------------------------------
+4. USER AUTHENTICATION & SECURITY
+--------------------------------------------------------------------------------
+[Image Label: Role-Based Access Control and Password Hashing]
+Location: \Controllers\AccountController.cs and \Models\User.cs
+
+• Description: Manages login, logout, and role assignments (Admin, Employee, 
+  SuperAdmin). Contains safeguards against downgrading the fundamental admin.
+• Algo Usage (PBKDF2 Password Hashing): Uses a cryptographic hashing algorithm 
+  combining the password with a 16-byte salt and iterating 10,000 times 
+  (Rfc2898DeriveBytes). This turns plain text passwords into secure hashes to 
+  prevent brute-force and dictionary attacks. 
+
+--------------------------------------------------------------------------------
+5. DATABASE ARCHITECTURE & SOFT DELETION
+--------------------------------------------------------------------------------
+[Image Label: Entity Framework Core DbContext]
+Location: \Data\BillingSystemDbContext.cs
+
+• Description: The core Data Access Layer mapping object-oriented models to 
+  SQL tables.
+• Algo Usage (Entity Framework Core LINQ Translator): EF Core compiles LINQ 
+  queries into raw T-SQL. A key algorithmic strategy implemented here is 
+  "Soft Deletion"—applying a global query filter `Where(e => !e.IsArchived)` so 
+  archived payments or users are hidden dynamically from standard queries 
+  without dropping rows from the table, ensuring historical data integrity.

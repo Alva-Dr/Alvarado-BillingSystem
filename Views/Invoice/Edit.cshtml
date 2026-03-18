@@ -1,0 +1,215 @@
+@model SarEquipEnterprise.Models.Invoice
+
+@{
+    ViewData["Title"] = "Edit Invoice";
+}
+
+<div class="container">
+    <h1>Edit Invoice</h1>
+    <hr />
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="InvoiceId" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Customer Information</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="CustomerName" class="form-label"></label>
+                            <input asp-for="CustomerName" class="form-control" />
+                            <span asp-validation-for="CustomerName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CustomerEmail" class="form-label"></label>
+                            <input asp-for="CustomerEmail" class="form-control" type="email" />
+                            <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CustomerAddress" class="form-label"></label>
+                            <textarea asp-for="CustomerAddress" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="CustomerAddress" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Invoice Details</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="InvoiceNumber" class="form-label"></label>
+                            <input asp-for="InvoiceNumber" class="form-control" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="InvoiceDate" class="form-label"></label>
+                            <input asp-for="InvoiceDate" class="form-control" type="date" />
+                            <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DueDate" class="form-label"></label>
+                            <input asp-for="DueDate" class="form-control" type="date" />
+                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PaymentTerms" class="form-label"></label>
+                            <input asp-for="PaymentTerms" class="form-control" />
+                            <span asp-validation-for="PaymentTerms" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label"></label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="Draft">Draft</option>
+                                <option value="Sent">Sent</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Overdue">Overdue</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Invoice Items</div>
+            <div class="card-body">
+                <div id="items-container">
+                    @for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        <div class="item-row mb-3 border p-3">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="form-label">Description</label>
+                                    <input name="Items[@i].Description" value="@Model.Items[i].Description" class="form-control" />
+                                    <input type="hidden" name="Items[@i].ItemId" value="@Model.Items[i].ItemId" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Quantity</label>
+                                    <input name="Items[@i].Quantity" type="number" value="@Model.Items[i].Quantity" class="form-control item-quantity" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Unit Price</label>
+                                    <input name="Items[@i].UnitPrice" type="number" step="0.01" value="@Model.Items[i].UnitPrice" class="form-control item-price" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Line Total</label>
+                                    <input name="Items[@i].LineTotal" type="number" step="0.01" value="@Model.Items[i].LineTotal" class="form-control item-total" readonly />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-danger btn-sm remove-item">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-secondary" id="add-item">Add Item</button>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">Totals</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="SubTotal" class="form-label"></label>
+                            <input asp-for="SubTotal" class="form-control" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="TaxAmount" class="form-label"></label>
+                            <input asp-for="TaxAmount" type="number" step="0.01" class="form-control" />
+                            <span asp-validation-for="TaxAmount" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DiscountAmount" class="form-label"></label>
+                            <input asp-for="DiscountAmount" type="number" step="0.01" class="form-control" />
+                            <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="TotalAmount" class="form-label"></label>
+                            <input asp-for="TotalAmount" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save Changes" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        let itemIndex = @Model.Items.Count;
+        document.getElementById('add-item').addEventListener('click', function() {
+            const container = document.getElementById('items-container');
+            const newItem = container.firstElementChild.cloneNode(true);
+            newItem.querySelectorAll('input').forEach(input => {
+                const match = input.name.match(/Items\[(\d+)\]/);
+                if (match) {
+                    input.name = input.name.replace(`[${match[1]}]`, `[${itemIndex}]`);
+                    if (input.classList.contains('item-total')) {
+                        input.value = '';
+                    } else if (input.classList.contains('item-quantity')) {
+                        input.value = '1';
+                    } else if (!input.type || input.type === 'text' || input.type === 'number') {
+                        input.value = '';
+                    }
+                }
+            });
+            container.appendChild(newItem);
+            itemIndex++;
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-item')) {
+                if (document.getElementById('items-container').children.length > 1) {
+                    e.target.closest('.item-row').remove();
+                }
+            }
+        });
+
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('item-quantity') || e.target.classList.contains('item-price')) {
+                const row = e.target.closest('.item-row');
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const total = row.querySelector('.item-total');
+                total.value = (quantity * price).toFixed(2);
+                calculateTotals();
+            }
+        });
+
+        document.getElementById('TaxAmount').addEventListener('input', calculateTotals);
+        document.getElementById('DiscountAmount').addEventListener('input', calculateTotals);
+
+        function calculateTotals() {
+            let subtotal = 0;
+            document.querySelectorAll('.item-total').forEach(input => {
+                subtotal += parseFloat(input.value) || 0;
+            });
+            document.getElementById('SubTotal').value = subtotal.toFixed(2);
+            
+            const tax = parseFloat(document.getElementById('TaxAmount').value) || 0;
+            const discount = parseFloat(document.getElementById('DiscountAmount').value) || 0;
+            document.getElementById('TotalAmount').value = (subtotal + tax - discount).toFixed(2);
+        }
+    </script>
+}

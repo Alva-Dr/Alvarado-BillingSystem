@@ -1,0 +1,67 @@
+================================================================================
+                    SAREQUIP ENTERPRISE SYSTEM SUMMARY
+                        DEFENSE PREPARATION DOCUMENT
+================================================================================
+
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+The SarEquip Enterprise system is a comprehensive, secure web-based application designed to manage billing, invoicing, user roles, payments, and accounting integrations. It streamlines business operations by digitizing financial processes, generating PDF invoices on the fly, and securely managing user access with role-based authentication.
+
+2. TECHNICAL STACK
+--------------------------------------------------------------------------------
+- Framework: ASP.NET Core MVC (Web Application)
+- Language: C# using modern .NET (net10.0)
+- Database: SQL Server with Entity Framework Core (Code-First Approach)
+- Authentication: ASP.NET Core Cookie Authentication with Role-based access control (RBAC). Passwords are securely hashed using PBKDF2 (SHA256) with a 16-byte salt and 10,000 iterations.
+- Third-Party Integrations: 
+  - QuestPDF: For robust, fluent generation of PDF invoices.
+  - CloudinaryDotNet: For seamless cloud-based image/asset management.
+
+3. CORE MODULES & FEATURES
+--------------------------------------------------------------------------------
+A. User Management & Security (AdminController, AccountController)
+- Three hierarchical roles: Employee, Admin, and SuperAdmin.
+- SuperAdmins can create, edit, deactivate, and archive users.
+- Security constraints: The system prevents deleting or downgrading the last active SuperAdmin to prevent account lockouts.
+- Soft Deletion: Users are "archived" rather than permanently deleted from the database to maintain referential integrity.
+
+B. Invoice Management (InvoiceController & IInvoiceService)
+- Full CRUD operations for generating invoices.
+- Invoices contain fields like Issue Date, Due Date, Items, Unit Price, and Notes.
+- PDF Generation Engine: Utilizes QuestPDF to instantly map digital invoice data to a well-formatted, printable A4 PDF document that includes dynamic calculation of total prices and itemized lists.
+
+C. Payment & Transaction Processing (PaymentController, TransactionController)
+- Tracks payments associated with specific invoices.
+- Supports payment archiving to hide obsolete or canceled payments without destroying historical data. 
+- Integrated Transactions: Tracks all financial movements in the system with distinct transaction types (e.g., revenues, refunds).
+
+D. Reporting & Accounting Evaluation (ReportsController, IntegrationController)
+- Generates detailed billing logs, revenue reports, outstanding reports, and payment summaries over specified date ranges.
+- Allows synchronizing and integrating the platform's internal ledgers with external accounting systems to streamline bookkeeping.
+
+4. DEFENSE SCRIPT & POTENTIAL QUESTIONS
+--------------------------------------------------------------------------------
+To prepare for your defense, here are anticipated questions and how to answer them:
+
+Q: Why did you choose ASP.NET Core MVC instead of a SPA framework like React/Angular?
+A: ASP.NET Core MVC provides a highly structured, strongly typed environment that seamlessly integrates the presentation layer with server-side logic (Entity Framework). It allows for rapid development, built-in robust security features (like Cookie Auth and Anti-forgery tokens), and easier SEO/Server-Side Rendering out of the box.
+
+Q: How do you handle file/document generation, specifically for invoices?
+A: The system uses QuestPDF, an open-source .NET library. Unlike HTML-to-PDF converters that can be unreliable regarding pagination and layout, QuestPDF uses a fluent API to specifically design A4 dimension pages natively. It ensures high performance and exact placement of text, tables, and borders.
+
+Q: How do you secure user passwords?
+A: Passwords are not stored in plain text. The system uses a PBKDF2 hashing algorithm (Rfc2898DeriveBytes) paired with a 16-byte cryptographic salt and 10,000 iterations. This makes the system highly resistant to brute-force and dictionary attacks.
+
+Q: Explain "Soft Deletion" and why you used it for Users and Payments.
+A: Soft Deletion means setting an "IsArchived" or "IsActive" flag to false instead of running a SQL DELETE command. We do this to preserve historical financial records. If a user made 100 transactions and was then permanently deleted, it could orphan those transaction records and break database referential integrity or historical audits.
+
+Q: How does the system defend against malicious inputs (e.g., SQL Injection, CSRF)?
+A: SQL Injection is mitigated inherently by using Entity Framework Core, which parameterizes all database queries. Cross-Site Request Forgery (CSRF) is blocked by utilizing the [ValidateAntiForgeryToken] attribute on all forms that modify data (POST requests).
+
+5. ADVICE FOR WEDNESDAY'S DEFENSE
+--------------------------------------------------------------------------------
+- Confidence is key: If asked a question you aren't 100% sure about, walk them through the logical flow of the MVC pattern (Model -> Controller -> View) and where you think the logic would reside.
+- Focus on Business Value: Emphasize that your system solves real-world accounting and management issues (automation via PDF generation, historical tracking via Soft Deletion).
+- Demonstrate Security: Highlight the custom password hashing and the fail-safes built into the Admin panel (e.g., preventing the last SuperAdmin from being deleted). 
+
+Good luck on your defense!

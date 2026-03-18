@@ -1,0 +1,114 @@
+@model SarEquipEnterprise.Models.User
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h2">Edit User</h1>
+                <a asp-action="Users" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white py-3">
+                    <h6 class="m-0 font-weight-bold">User Information</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="Email" />
+                        <input type="hidden" asp-for="PasswordHash" />
+
+                        <!-- Email (Read-only) -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label font-weight-bold">Email Address</label>
+                            <input type="email" class="form-control" value="@Model.Email" disabled>
+                            <small class="text-muted">Email cannot be changed</small>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label font-weight-bold">Full Name</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter full name">
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- User Role -->
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label font-weight-bold">User Role</label>
+                            <select asp-for="Role" class="form-control form-select">
+                                <option value="@SarEquipEnterprise.Models.UserRole.Employee">Employee</option>
+                                <option value="@SarEquipEnterprise.Models.UserRole.Admin">Administrator</option>
+                                <option value="@SarEquipEnterprise.Models.UserRole.SuperAdmin">Super Admin</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                            <small class="d-block mt-2">
+                                <strong>Roles:</strong><br>
+                                <i class="fas fa-info-circle"></i> <strong>Employee:</strong> Limited access to core features<br>
+                                <i class="fas fa-info-circle"></i> <strong>Admin:</strong> Full operational access<br>
+                                <i class="fas fa-info-circle"></i> <strong>Super Admin:</strong> Full system access (manage users & roles)
+                            </small>
+                        </div>
+
+                        <!-- Account Status -->
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" type="checkbox" class="form-check-input" id="isActiveCheckbox">
+                                <label class="form-check-label font-weight-bold" for="isActiveCheckbox">
+                                    Account Active
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-2">
+                                Deactivate this account to prevent login without permanently deleting the user.
+                            </small>
+                        </div>
+
+                        <!-- Account Created Date -->
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Account Created</label>
+                            <p class="form-control-plaintext">
+                                @Model.CreatedDate.ToString("MMMM dd, yyyy \\a\\t HH:mm:ss")
+                            </p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <a asp-action="Users" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Warning Messages -->
+            <div class="card shadow mt-3">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h6 class="m-0 font-weight-bold"><i class="fas fa-exclamation-triangle"></i> Important Notes</h6>
+                </div>
+                <div class="card-body small">
+                    <ul>
+                        <li>You cannot change the user's email address here. Contact system support if needed.</li>
+                        <li>Deactivating a Super Admin is only allowed if there are other active Super Admins.</li>
+                        <li>Changing a user's role takes effect on their next login.</li>
+                        <li>All changes made here are immediately saved to the database.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

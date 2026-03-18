@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Billing Reports";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Billing Reports</h1>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Revenue Report</h5>
+                    <p class="card-text">View revenue summary for a specific date range including total revenue, payments, and invoice statistics.</p>
+                    <a asp-action="Revenue" class="btn btn-primary">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Invoice Status Report</h5>
+                    <p class="card-text">View invoice status breakdown including paid, pending, and overdue invoices.</p>
+                    <a asp-action="InvoiceStatus" class="btn btn-primary">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Payment Report</h5>
+                    <p class="card-text">View payment details grouped by payment method and status.</p>
+                    <a asp-action="Payment" class="btn btn-primary">Generate Report</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Outstanding Invoices Report</h5>
+                    <p class="card-text">View all outstanding invoices that are not yet paid or cancelled.</p>
+                    <a asp-action="Outstanding" class="btn btn-primary">Generate Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

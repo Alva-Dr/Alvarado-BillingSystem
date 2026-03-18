@@ -1,0 +1,75 @@
+Controller -> Service -> DbContext: how a controller posts data to the database
+
+Short explanation:
+- Controller receives POST (form or JSON).
+- Controller calls a Service method (DI-injected) to handle business logic and DB operations.
+- Service uses `BillingSystemDbContext` (EF Core) to `Add()` entities and `SaveChangesAsync()` to persist to the database.
+- `Program.cs` registers the DbContext with `AddDbContext<T>()` so services/controllers can receive it via DI.
+
+Concrete examples from this project (file locations):
+1) Transaction flow
+- Controller: Controllers/TransactionController.cs
+  - POST action (Create): calls `await _transactionService.CreateTransactionAsync(transaction);`
+
+- Service: Services/TransactionService.cs (DB code)
+  - Adds and saves:
+    _context.Transactions.Add(transaction);
+    await _context.SaveChangesAsync();
+
+  - The service also sets fields like `TransactionDate`, `Status`, computes `TransactionNumber`, and `BalanceAfter` before adding.
+
+2) Payment flow
+- Controller: Controllers/PaymentController.cs
+  - POST action (Create): calls `await _payment_service.ProcessPaymentAsync(payment);`
+
+- Service: Services/PaymentService.cs (DB code)
+  - Sets `PaymentDate`, `PaymentStatus`, optionally generates `PaymentNumber`, updates invoice status, then:
+    _context.Payments.Add(payment);
+    await _context.SaveChangesAsync();
+
+3) DbContext registration (DI) - Program.cs
+- Example (in this project):
+  var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+  builder.Services.AddDbContext<BillingSystemDbContext>(options =>
+      options.UseSqlServer(connectionString));
+
+4) Typical minimal controller POST example pattern
+- Controller (simplified):
+  [HttpPost]
+  [ValidateAntiForgeryToken]
+  public async Task<IActionResult> Create(Transaction transaction)
+  {
+      if (ModelState.IsValid)
+      {
+          await _transactionService.CreateTransactionAsync(transaction);
+          return RedirectToAction(nameof(Index));
+      }
+      return View(transaction);
+  }
+
+5) Typical minimal service DB code pattern
+- Service method (simplified):
+  public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
+  {
+      transaction.TransactionDate = DateTime.Now;
+      transaction.Status = "Completed";
+      _context.Transactions.Add(transaction);
+      await _context.SaveChangesAsync();
+      return transaction;
+  }
+
+Where to check in this repo:
+- `Controllers/TransactionController.cs` (controller POST calls service)
+- `Services/TransactionService.cs` (EF Core add + SaveChangesAsync)
+- `Controllers/PaymentController.cs` and `Services/PaymentService.cs` for another example
+- `Data/BillingSystemDbContext.cs` (DbSet declarations)
+- `Program.cs` (DbContext registration)
+
+How to test locally:
+1) Start the app:
+   dotnet run
+2) Open the Transaction/Create form, submit; service code will `Add()` and `SaveChangesAsync()`.
+3) Observe database via your DB tool (SQL Server Management Studio or Azure Data Studio) using the `DefaultConnection` connection string.
+
+Commands to open the repo file in Notepad (Windows):
+notepad txt\Controller_DB_Posting.txt

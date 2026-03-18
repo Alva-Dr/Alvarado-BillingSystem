@@ -1,0 +1,102 @@
+@model SarEquipEnterprise.Models.Payment
+
+@{
+    ViewData["Title"] = "Process Payment";
+    var invoices = ViewBag.Invoices as List<SarEquipEnterprise.Models.Invoice> ?? new List<SarEquipEnterprise.Models.Invoice>();
+}
+
+<div class="container">
+    <h1>Process Payment</h1>
+    <hr />
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Payment Information</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="InvoiceId" class="form-label">Invoice</label>
+                            <select asp-for="InvoiceId" class="form-select" id="invoiceSelect">
+                                <option value="">-- Select Invoice --</option>
+                                @foreach (var invoice in invoices)
+                                {
+                                    <option value="@invoice.InvoiceId" data-amount="@invoice.TotalAmount">
+                                        @invoice.InvoiceNumber - @invoice.CustomerName - ₱@invoice.TotalAmount.ToString("N2")
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="InvoiceId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Amount" class="form-label"></label>
+                            <input asp-for="Amount" type="number" step="0.01" class="form-control" />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PaymentDate" class="form-label"></label>
+                            <input asp-for="PaymentDate" class="form-control" type="date" />
+                            <span asp-validation-for="PaymentDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PaymentMethod" class="form-label"></label>
+                            <select asp-for="PaymentMethod" class="form-select">
+                                <option value="">-- Select Method --</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Check">Check</option>
+                                <option value="Online Payment">Online Payment</option>
+                            </select>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Additional Information</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="ReferenceNumber" class="form-label"></label>
+                            <input asp-for="ReferenceNumber" class="form-control" placeholder="Transaction reference number" />
+                            <span asp-validation-for="ReferenceNumber" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ProcessedBy" class="form-label"></label>
+                            <input asp-for="ProcessedBy" class="form-control" />
+                            <span asp-validation-for="ProcessedBy" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Notes" class="form-label"></label>
+                            <textarea asp-for="Notes" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Process Payment" class="btn btn-success" />
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('invoiceSelect').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const amount = parseFloat(selectedOption.getAttribute('data-amount'));
+                document.getElementById('Amount').value = amount.toFixed(2);
+            }
+        });
+    </script>
+}
