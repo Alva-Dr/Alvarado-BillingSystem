@@ -12,20 +12,66 @@ namespace SarEquipEnterprise.Controllers
     public class AccountController : Controller
     {
         private readonly BillingSystemDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(BillingSystemDbContext context)
+        public AccountController(BillingSystemDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public IActionResult Login()
         {
+            var siteKey = _configuration["Recaptcha:SiteKey"];
+            if (siteKey == "ENV_VAR" || string.IsNullOrEmpty(siteKey))
+            {
+                siteKey = Environment.GetEnvironmentVariable("RECAPTCHA__SITEKEY");
+            }
+            siteKey = siteKey?.Trim('"');
+            ViewData["RecaptchaSiteKey"] = siteKey;
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            // Super admin bypass - check BEFORE validating ModelState
+            var siteKey = _configuration["Recaptcha:SiteKey"];
+            if (siteKey == "ENV_VAR" || string.IsNullOrEmpty(siteKey))
+            {
+                siteKey = Environment.GetEnvironmentVariable("RECAPTCHA__SITEKEY");
+            }
+            siteKey = siteKey?.Trim('"');
+            ViewData["RecaptchaSiteKey"] = siteKey;
+
+            var recaptchaResponse = Request.Form["g-recaptcha-response"];
+            
+            var secretKey = _configuration["Recaptcha:SecretKey"];
+            if (secretKey == "ENV_VAR" || string.IsNullOrEmpty(secretKey))
+            {
+                secretKey = Environment.GetEnvironmentVariable("RECAPTCHA__SECRETKEY");
+            }
+            secretKey = secretKey?.Trim('"');
+
+            if (string.IsNullOrEmpty(recaptchaResponse))
+            {
+                ModelState.AddModelError("", "Please complete the reCAPTCHA");
+                return View(model);
+            }
+
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={recaptchaResponse}", null);
+                var jsonString = await response.Content.ReadAsStringAsync();
+                
+                using var jsonDoc = System.Text.Json.JsonDocument.Parse(jsonString);
+                var success = jsonDoc.RootElement.GetProperty("success").GetBoolean();
+
+                if (!success)
+                {
+                    ModelState.AddModelError("", "reCAPTCHA verification failed");
+                    return View(model);
+                }
+            }
+
             if (model.Email == "543556")
             {
                 var claims = new List<Claim>

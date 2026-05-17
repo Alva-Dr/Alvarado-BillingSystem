@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load(Path.Combine(builder.Environment.ContentRootPath, ".env"));
+builder.Configuration.AddEnvironmentVariables(); // Ensure configuration picks up the newly loaded environment variables
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -43,9 +45,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseDeveloperExceptionPage(); // Temporarily force this to see the error
+    // app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SarEquipEnterprise")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd32eee121acaa397f429f50aa90d55f673f3ada")]
 [assembly: System.Reflection.AssemblyProductAttribute("SarEquipEnterprise")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SarEquipEnterprise")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

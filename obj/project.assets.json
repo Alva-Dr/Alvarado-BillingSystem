@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {
       "Azure.Core/1.47.1": {
@@ -52,6 +52,18 @@
           "lib/netstandard2.0/CloudinaryDotNet.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "DotNetEnv/3.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Superpower": "3.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/DotNetEnv.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/DotNetEnv.dll": {}
         }
       },
       "Humanizer.Core/2.14.1": {
@@ -859,6 +871,19 @@
           }
         }
       },
+      "Superpower/3.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Superpower.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Superpower.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "System.ClientModel/1.5.1": {
         "type": "package",
         "dependencies": {
@@ -1151,6 +1176,20 @@
         "lib/netstandard1.3/CloudinaryDotNet.xml",
         "lib/netstandard2.0/CloudinaryDotNet.dll",
         "lib/netstandard2.0/CloudinaryDotNet.xml"
+      ]
+    },
+    "DotNetEnv/3.2.0": {
+      "sha512": "2q+PD+aJcRW9QuRcIv4F8WbvEDxI6cwxzZJec2i45cBY4cAKCAoW4ZPkApJ7H82wr6Yfmxx/0kb1nLnRmZrGZA==",
+      "type": "package",
+      "path": "dotnetenv/3.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "dotnetenv.3.2.0.nupkg.sha512",
+        "dotnetenv.nuspec",
+        "lib/netstandard2.0/DotNetEnv.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -2866,6 +2905,22 @@
         "runtimes/win-x86/native/QuestPdfSkia.dll"
       ]
     },
+    "Superpower/3.0.0": {
+      "sha512": "bjKbAYWePooCAvPxQq+3KnmcLfRggMyRoXmtBMlmCG71bdwBHrO6rmRJ2DRIodg5aztNcxeZXBUVWT+H+MZUhw==",
+      "type": "package",
+      "path": "superpower/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Superpower-White-400px.png",
+        "lib/net5.0/Superpower.dll",
+        "lib/net5.0/Superpower.xml",
+        "lib/netstandard2.0/Superpower.dll",
+        "lib/netstandard2.0/Superpower.xml",
+        "superpower.3.0.0.nupkg.sha512",
+        "superpower.nuspec"
+      ]
+    },
     "System.ClientModel/1.5.1": {
       "sha512": "k2jKSO0X45IqhVOT9iQB4xralNN9foRQsRvXBTyRpAVxyzCJlG895T9qYrQWbcJ6OQXxOouJQ37x5nZH5XKK+A==",
       "type": "package",
@@ -3223,6 +3278,7 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "CloudinaryDotNet >= 1.28.0",
+      "DotNetEnv >= 3.2.0",
       "Microsoft.EntityFrameworkCore >= 10.0.3",
       "Microsoft.EntityFrameworkCore.SqlServer >= 10.0.3",
       "Microsoft.EntityFrameworkCore.Tools >= 10.0.3",
@@ -3260,6 +3316,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -3274,15 +3331,20 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "CloudinaryDotNet": {
             "target": "Package",
             "version": "[1.28.0, )"
+          },
+          "DotNetEnv": {
+            "target": "Package",
+            "version": "[3.2.0, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -3322,7 +3384,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -1,0 +1,20 @@
+[Oo]bj/
+[Bb]in/
+.vs/
+# --- Target Folders ---
+[Oo]bj/
+[Bb]in/
+
+# --- IDE Files ---
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# --- Sensitive Data ---
+.env
+appsettings.json
+appsettings.Development.json
+*.pfx
+*.publishsettings
